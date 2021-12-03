@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { DoctorModule } from './doctor/doctor.module';
+import { PatientModule } from './patient/patient.module';
 
 @Global()
 @Module({
@@ -17,7 +18,8 @@ import { DoctorModule } from './doctor/doctor.module';
       secret: 'secret key',
       signOptions: { expiresIn: '6h' },
     }),
-    DoctorModule
+    DoctorModule,
+    PatientModule
   ],
   exports: [JwtModule],
 })

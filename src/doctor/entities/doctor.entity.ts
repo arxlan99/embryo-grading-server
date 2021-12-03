@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Patient } from 'src/patient/entities/patient.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Doctor {
@@ -14,6 +15,9 @@ export class Doctor {
 
     @Column({ unique: true })
     email: string;
+
+    @OneToMany(type => Patient, patient => patient.doctor)
+    patients: Patient[];
 
     @Column()    
     @Exclude()
