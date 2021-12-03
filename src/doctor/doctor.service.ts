@@ -24,7 +24,7 @@ export class DoctorService {
         // check email is already registered
         const existedUser = await this.doctorRepository.findOne({ email: signUpDto.email });
         if (existedUser) {
-            throw new BadRequestException(['This email is already registered']);
+            throw new BadRequestException(['Bu email zaten kayıtlı']);
         }
 
         // hash password and save
@@ -48,12 +48,12 @@ export class DoctorService {
         // check email is already registered
         const existedUser = await this.doctorRepository.findOne({ email: signInDto.email });
         if (!existedUser) {
-            throw new BadRequestException(['Wrong password or email']);
+            throw new BadRequestException(['Hatalı email veya şifre']);
         }
 
         // compare passwords
         if (!await bcrypt.compare(signInDto.password, existedUser.password)) {
-            throw new BadRequestException(['Wrong password or email']);
+            throw new BadRequestException(['Hatalı email veya şifre']);
         }
 
         // return signed jwt token

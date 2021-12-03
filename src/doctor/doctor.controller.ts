@@ -12,6 +12,7 @@ import { AuthGuard } from "./guards/auth.guard";
 export class DoctorController {
     constructor(private readonly doctorService: DoctorService) { }
 
+    @UseGuards(AuthGuard)
     @Get()
     @HttpCode(200)
     getAll() {
