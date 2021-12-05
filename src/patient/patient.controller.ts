@@ -1,8 +1,9 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Post, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Param, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/doctor/guards/auth.guard";
 import { CreatePatientDto } from "./dtos/create-patient.dto";
 import { PatientService } from "./patient.service";
+import { Response, Request } from 'express';
 
 @ApiTags('patients')
 @Controller('patients')
@@ -21,7 +22,15 @@ export class PatientController {
 
     @Get()
     @HttpCode(200)
-    getAll() {
-        return this.patientService.getPatients();
+    getAll(@Req() req: Request) {
+        const token = req.cookies.jwt;
+        return this.patientService.getPatients(token);
+    }
+
+    @Get(':id')
+    @HttpCode(200)
+    getPatientById(@Param() params,  @Req() req: Request) {
+        const token = req.cookies.jwt;
+        return this.patientService.getPatientById(params.id, token);
     }
 }
