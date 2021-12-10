@@ -1,5 +1,6 @@
 import { Doctor } from 'src/doctor/entities/doctor.entity';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Record } from './record.entity';
 
 @Entity()
 export class Patient {
@@ -20,6 +21,9 @@ export class Patient {
 
     @ManyToOne(type => Doctor, doctor => doctor.patients)
     doctor: Doctor;
+
+    @OneToMany(type => Record, record => record.patient)
+    records: Record[];
 
     @Column()
     phoneNumber: string;

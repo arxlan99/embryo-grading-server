@@ -5,12 +5,15 @@ import { Doctor } from "src/doctor/entities/doctor.entity";
 import { Repository } from "typeorm";
 import { CreatePatientDto } from "./dtos/create-patient.dto";
 import { Patient } from "./entities/patient.entity";
+import { Record } from "./entities/record.entity";
 
 @Injectable()
 export class PatientService {
     constructor(
         @InjectRepository(Patient)
         private patientRepository: Repository<Patient>,
+        @InjectRepository(Record)
+        private recordRepository: Repository<Record>,
         @InjectRepository(Doctor)
         private doctorRepository: Repository<Doctor>,
         private readonly jwtService: JwtService
@@ -32,7 +35,7 @@ export class PatientService {
 
     async getPatientById(patientId: number, token: string) {
         const data = await this.jwtService.verifyAsync(token);
-        
+
         const patient = await this.patientRepository.findOne({
             where: {
                 id: patientId,
@@ -47,13 +50,43 @@ export class PatientService {
         return patient;
     }
 
-    async getPatients(token :string) {
+    async getPatients(token: string) {
         const data = await this.jwtService.verifyAsync(token);
-        
-        return this.patientRepository.find({ 
+
+        return this.patientRepository.find({
             where: {
                 doctor: data.id
             },
-            relations: ['doctor'] });
+            relations: ['doctor']
+        });
+    }
+
+    async addRecordForPatient(files: Array<Express.Multer.File>, id: number) {
+        const patient = await this.patientRepository.findOne(id);
+        if (!patient) {
+            throw new BadRequestException(["Hasta bulunamadı"]);
+        }
+
+        for (const file of files) {
+            await this.recordRepository.save({
+                label: file.fieldname,
+                url: file.path,
+                patient: patient
+            });
+        }
+    }
+
+    async getRecords(id: number) {
+        const patient = await this.patientRepository.findOne(id);
+        if (!patient) {
+            throw new BadRequestException(["Hasta bulunamadı"]);
+        }
+
+        return this.recordRepository.find({
+            where: {
+                patient: patient
+            },
+            order: { createdAt: 'DESC' }
+        });
     }
 }
