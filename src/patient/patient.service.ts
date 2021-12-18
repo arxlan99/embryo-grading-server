@@ -19,8 +19,10 @@ export class PatientService {
         private readonly jwtService: JwtService
     ) { }
 
-    async createPatient(createPatientDto: CreatePatientDto) {
-        const doctor = await this.doctorRepository.findOne({ id: createPatientDto.doctorId });
+    async createPatient(createPatientDto: CreatePatientDto, token: string) {
+        const data = await this.jwtService.verifyAsync(token);
+
+        const doctor = await this.doctorRepository.findOne({ id: data.id });
         if (!doctor) return new BadRequestException(['Doktor bulunamadı']);
 
         return this.patientRepository.save({

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -6,6 +6,7 @@ import { SignUpDto } from "./dtos/signup.dto";
 import { Doctor } from "./entities/doctor.entity";
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from "./dtos/signin.dto";
+import { ChangePasswordDto } from "./dtos/changePassword.dto";
 
 @Injectable()
 export class DoctorService {
@@ -67,5 +68,22 @@ export class DoctorService {
         const user = await this.doctorRepository.findOne({ id: data.id });
         // and return
         return user;
+    }
+
+    async changePassword(token: string, changePasswordDto: ChangePasswordDto) {
+        const data = await this.jwtService.verifyAsync(token);
+        const user = await this.doctorRepository.findOne({ id: data.id });
+        if (!user) {
+            throw new NotFoundException(['Kullanıcı bulunamadı']);
+        }
+
+        if (!await bcrypt.compare(changePasswordDto.oldPassword, user.password)) {
+            throw new BadRequestException(['Girilen eski şifre hatalı']);
+        }
+
+        const hashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 12);
+        user.password = hashedPassword;
+
+        return this.doctorRepository.save(user);
     }
 }

@@ -5,6 +5,7 @@ import { SignUpDto } from "./dtos/signup.dto";
 import { Response, Request } from 'express';
 import { SignInDto } from "./dtos/signin.dto";
 import { AuthGuard } from "./guards/auth.guard";
+import { ChangePasswordDto } from "./dtos/changePassword.dto";
 
 @ApiTags('doctors')
 @Controller('doctors')
@@ -23,7 +24,7 @@ export class DoctorController {
     @HttpCode(200)
     async signIn(@Body() signInDto: SignInDto, @Res({ passthrough: true }) res: Response) {
         const jwt = await this.doctorService.signIn(signInDto);
-        res.cookie('jwt', jwt, { httpOnly: true });
+        res.cookie('jwt', jwt, { httpOnly: true, sameSite: "none", secure: true });
 
         return {
             msg: 'Signin success'
@@ -34,7 +35,7 @@ export class DoctorController {
     @HttpCode(201)
     async signUp(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: Response) {
         const { newUser, jwt } = await this.doctorService.signUp(signUpDto);
-        res.cookie('jwt', jwt, { httpOnly: true });
+        res.cookie('jwt', jwt, { httpOnly: true, sameSite: "none", secure: true });
 
         return newUser;
     }
@@ -47,6 +48,14 @@ export class DoctorController {
         return {
             msg: 'Signout success'
         }
+    }
+
+    @Post('change-password')
+    @HttpCode(200)
+    async changePassword(@Body() changePasswordDto: ChangePasswordDto, @Req() req: Request) {
+        const token = req.cookies.jwt;
+
+        return this.doctorService.changePassword(token, changePasswordDto);
     }
 
     @Get('me')

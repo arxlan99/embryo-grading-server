@@ -8,14 +8,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(cookieParser());
+
   app.enableCors({
-    origin: 'http://localhost:3000',
-    credentials: true
+    origin: ['https://embryo-grading-client.vercel.app', 'http://localhost:3000'],
+    credentials: true,
   })
   
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
   app.setGlobalPrefix('api');
-  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3001, async () => {

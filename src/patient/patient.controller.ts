@@ -34,8 +34,9 @@ export class PatientController {
 
     @Post()
     @HttpCode(201)
-    async createPatient(@Body() createPatientDto: CreatePatientDto) {
-        const patient = await this.patientService.createPatient(createPatientDto);
+    async createPatient(@Req() req: Request, @Body() createPatientDto: CreatePatientDto) {
+        const token = req.cookies.jwt;
+        const patient = await this.patientService.createPatient(createPatientDto, token);
 
         return patient;
     }
@@ -51,6 +52,7 @@ export class PatientController {
     @HttpCode(200)
     getPatientById(@Param() params, @Req() req: Request) {
         const token = req.cookies.jwt;
+        
         return this.patientService.getPatientById(params.id, token);
     }
 

@@ -18,10 +18,6 @@ export class CreatePatientDto {
     @ApiProperty()
     birthDate: Date;
 
-    @IsNumberString()
-    @ApiProperty()
-    doctorId: number;
-
     @IsNumberString({}, { message: "Telefon No alanı geçerli bir numara olmalı" })
     @ApiProperty()
     phoneNumber: string;
