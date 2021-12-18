@@ -4,6 +4,7 @@ import { getConnectionOptions } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { DoctorModule } from './doctor/doctor.module';
 import { PatientModule } from './patient/patient.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Global()
 @Module({
@@ -14,8 +15,11 @@ import { PatientModule } from './patient/patient.module';
           autoLoadEntities: true,
         }),
     }),
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
     JwtModule.register({
-      secret: 'secret key',
+      secret: process.env.SECRET,
       signOptions: { expiresIn: '6h' },
     }),
     DoctorModule,
@@ -23,4 +27,4 @@ import { PatientModule } from './patient/patient.module';
   ],
   exports: [JwtModule],
 })
-export class AppModule {}
+export class AppModule { }
