@@ -16,15 +16,15 @@ import { ConfigModule } from '@nestjs/config';
         }),
     }),
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     JwtModule.register({
       secret: process.env.SECRET,
       signOptions: { expiresIn: '6h' },
     }),
     DoctorModule,
-    PatientModule
+    PatientModule,
   ],
   exports: [JwtModule],
 })
-export class AppModule { }
+export class AppModule {}

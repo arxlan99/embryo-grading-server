@@ -1,33 +1,40 @@
 import { Doctor } from '../../doctor/entities/doctor.entity';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Record } from './record.entity';
 
 @Entity()
 export class Patient {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    firstName: string;
+  @Column()
+  firstName: string;
 
-    @Column()
-    lastName: string;
+  @Column()
+  lastName: string;
 
-    @Column()
-    tcNo: string;
+  @Column()
+  tcNo: string;
 
-    @Column({ type: 'timestamptz' })
-    birthDate: Date;
+  @Column({ type: 'timestamptz' })
+  birthDate: Date;
 
-    @ManyToOne(type => Doctor, doctor => doctor.patients)
-    doctor: Doctor;
+  @ManyToOne((type) => Doctor, (doctor) => doctor.patients)
+  doctor: Doctor;
 
-    @OneToMany(type => Record, record => record.patient)
-    records: Record[];
+  @OneToMany((type) => Record, (record) => record.patient)
+  records: Record[];
 
-    @Column()
-    phoneNumber: string;
+  @Column()
+  phoneNumber: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 }

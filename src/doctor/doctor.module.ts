@@ -6,12 +6,12 @@ import { DoctorService } from './doctor.service';
 import { Doctor } from './entities/doctor.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Doctor]),
-        forwardRef(() => PatientModule)
-    ],
-    controllers: [DoctorController],
-    providers: [DoctorService],
-    exports: [ TypeOrmModule]
-  })
-  export class DoctorModule { }
+  imports: [
+    TypeOrmModule.forFeature([Doctor]),
+    forwardRef(() => PatientModule),
+  ],
+  controllers: [DoctorController],
+  providers: [DoctorService],
+  exports: [TypeOrmModule],
+})
+export class DoctorModule {}

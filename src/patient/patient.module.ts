@@ -7,11 +7,11 @@ import { PatientController } from './patient.controller';
 import { PatientService } from './patient.service';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Patient, Record]),
-        forwardRef(() => DoctorModule)
-    ],
-    controllers: [PatientController],
-    providers: [PatientService]
+  imports: [
+    TypeOrmModule.forFeature([Patient, Record]),
+    forwardRef(() => DoctorModule),
+  ],
+  controllers: [PatientController],
+  providers: [PatientService],
 })
-export class PatientModule { }
+export class PatientModule {}
