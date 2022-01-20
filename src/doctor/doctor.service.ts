@@ -12,18 +12,34 @@ import { Doctor } from './entities/doctor.entity';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from './dtos/signin.dto';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { Patient } from 'src/patient/entities/patient.entity';
+import { Record } from 'src/patient/entities/record.entity';
 
 @Injectable()
 export class DoctorService {
   constructor(
     @InjectRepository(Doctor)
     private doctorRepository: Repository<Doctor>,
+    @InjectRepository(Patient)
+    private patientRepository: Repository<Patient>,
+    @InjectRepository(Record)
+    private recordRepository: Repository<Record>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async getAll() {
     const doctors = await this.doctorRepository.find();
     return doctors;
+  }
+
+  async getStats() {
+    const doctorCount = await this.doctorRepository.count();
+    const patientCount = await this.patientRepository.count();
+    const recordCount = await this.recordRepository.count();
+
+    return {
+      doctorCount, patientCount, recordCount
+    }
   }
 
   async signUp(signUpDto: SignUpDto) {

@@ -31,6 +31,12 @@ export class DoctorController {
     return this.doctorService.getAll();
   }
 
+  @Get('stats')
+  @HttpCode(200)
+  getStats() {
+    return this.doctorService.getStats();
+  }
+
   @Post('signin')
   @HttpCode(200)
   async signIn(
